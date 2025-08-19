@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import axios from "axios";
-import { FaArrowLeft } from "react-icons/fa";
+import { ArrowLeft, Upload, Image, DollarSign, Tag, Save, Eye } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import Sidebar from "../../layout/Sidebar";
 
 export default function CreateCourse() {
@@ -12,15 +14,16 @@ export default function CreateCourse() {
   const [discountedPrice, setDiscountedPrice] = useState("");
   const [coverImage, setCoverImage] = useState(null);
   const [coverPreview, setCoverPreview] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
     if (id) {
-      axios
-        .get(`http://localhost:3001/api/course/${id}`)
-        .then((res) => {
+      const fetchCourse = async () => {
+        try {
+          const res = await axios.get(`http://localhost:3001/api/course/${id}`);
           const course = res.data;
           setTitle(course.title);
           setDescription(course.description);
@@ -30,10 +33,12 @@ export default function CreateCourse() {
           if (course.coverImage) {
             setCoverPreview(`http://localhost:3001${course.coverImage}`);
           }
-        })
-        .catch((err) => {
+        } catch (err) {
           console.error("Failed to fetch course:", err);
-        });
+          toast.error("Failed to load course data");
+        }
+      };
+      fetchCourse();
     }
   }, [id]);
 
@@ -50,18 +55,20 @@ export default function CreateCourse() {
     reader.readAsDataURL(file);
   };
 
-  const handleNext = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!title || !description || (!coverImage && !id)) {
-      alert("Please fill all required fields including cover image.");
+      toast.error("Please fill all required fields including cover image.");
       return;
     }
 
     if (plan === "one-time" && (!totalPrice || !discountedPrice)) {
-      alert("Please enter total and discounted price for one-time plan.");
+      toast.error("Please enter total and discounted price for one-time plan.");
       return;
     }
+
+    setLoading(true);
 
     try {
       const formData = new FormData();
@@ -72,7 +79,7 @@ export default function CreateCourse() {
       formData.append("discountedPrice", plan === "one-time" ? discountedPrice : 0);
       if (coverImage) formData.append("coverImage", coverImage);
 
-      const token = localStorage.getItem("token"); // 👈 fetch token
+      const token = localStorage.getItem("token");
 
       let response;
       if (id) {
@@ -82,10 +89,11 @@ export default function CreateCourse() {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`, // 👈 attach token
+              Authorization: `Bearer ${token}`,
             },
           }
         );
+        toast.success("Course updated successfully!");
       } else {
         response = await axios.post(
           "http://localhost:3001/api/create",
@@ -93,163 +101,309 @@ export default function CreateCourse() {
           {
             headers: {
               "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`, // 👈 attach token
+              Authorization: `Bearer ${token}`,
             },
           }
         );
+        toast.success("Course created successfully!");
       }
 
-      alert("✅ Course saved successfully!");
       const courseId = response.data._id || id;
       navigate(`/course-content/${courseId}`);
     } catch (error) {
-      console.error("❌ Error saving course:", error);
-      alert("Failed to save course.");
+      console.error("Error saving course:", error);
+      toast.error("Failed to save course. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex">
+    <div className="flex bg-gray-50 min-h-screen">
       <Sidebar />
-      <form
-        onSubmit={handleNext}
-        encType="multipart/form-data"
-        className="flex-1 bg-white min-h-screen"
-      >
-        <div className="flex justify-between items-center p-14 border-b shadow-sm sticky top-0 bg-white z-20">
-          <div className="flex items-center space-x-3">
-            <FaArrowLeft
-              className="text-gray-700 cursor-pointer"
-              onClick={() => navigate(-1)}
-            />
-            <h2 className="text-xl font-semibold">
-              {id ? "Edit Course" : "Create a course"}
-            </h2>
-          </div>
-          {!id && (
-            <button
-              type="submit"
-              className="bg-blue-800 text-white px-6 py-2 rounded hover:bg-blue-900"
-            >
-              Next
-            </button>
-          )}
-        </div>
-
-        <div className="p-8">
-          <label className="block font-medium mb-1">Title *</label>
-          <input
-            type="text"
-            placeholder="Enter course title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="border p-2 rounded w-full mb-4"
-          />
-
-          <label className="block font-medium mb-1">Description *</label>
-          <textarea
-            placeholder="Write course description..."
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows="6"
-            className="border p-2 rounded w-full mb-6"
-          />
-
-          <label className="block font-medium mb-1 mt-4">Cover Image *</label>
-          {coverPreview ? (
-            <img
-              src={coverPreview}
-              alt="Preview"
-              className="h-40 w-full object-cover rounded mb-2"
-            />
-          ) : (
-            <div className="h-40 w-full flex items-center justify-center text-gray-500 bg-gray-100 rounded mb-2">
-              No Cover
+      
+      <div className="flex-1">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white border-b border-gray-200 p-8"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate(-1)}
+                className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+              >
+                <ArrowLeft className="w-6 h-6 text-gray-600" />
+              </motion.button>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  {id ? "Edit Course" : "Create New Course"}
+                </h1>
+                <p className="text-gray-600 mt-1">
+                  {id ? "Update your course details" : "Share your knowledge with the world"}
+                </p>
+              </div>
             </div>
-          )}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="border p-2 w-full"
-          />
-
-          <label className="block font-medium text-lg mb-2 mt-6">Set pricing</label>
-          <div className="space-y-4">
-            <label className="block border p-4 rounded-lg cursor-pointer">
-              <div className="flex items-center space-x-3">
-                <input
-                  type="radio"
-                  name="pricing"
-                  value="free"
-                  checked={plan === "free"}
-                  onChange={() => setPlan("free")}
-                />
-                <div>
-                  <div className="font-semibold">Free plan</div>
-                  <div className="text-sm text-gray-600">
-                    Allow unrestricted access to your content free of cost
-                  </div>
-                </div>
-              </div>
-            </label>
-
-            <label className="block border p-4 rounded-lg cursor-pointer bg-gray-50 ring-1 ring-blue-300">
-              <div className="flex items-center space-x-3 mb-4">
-                <input
-                  type="radio"
-                  name="pricing"
-                  value="one-time"
-                  checked={plan === "one-time"}
-                  onChange={() => setPlan("one-time")}
-                />
-                <div>
-                  <div className="font-semibold">One-time plan</div>
-                  <div className="text-sm text-gray-600">
-                    Allow full course access with a single payment
-                  </div>
-                </div>
-              </div>
-
-              {plan === "one-time" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm mb-1 font-medium">Total price *</label>
-                    <div className="flex items-center border rounded overflow-hidden">
-                      <span className="px-3 text-gray-600 bg-gray-100">₹</span>
-                      <input
-                        type="number"
-                        value={totalPrice}
-                        onChange={(e) => setTotalPrice(e.target.value)}
-                        className="w-full p-2 outline-none"
-                        placeholder="Enter price"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm mb-1 font-medium">Discounted price *</label>
-                    <div className="flex items-center border rounded overflow-hidden">
-                      <span className="px-3 text-gray-600 bg-gray-100">₹</span>
-                      <input
-                        type="number"
-                        value={discountedPrice}
-                        onChange={(e) => setDiscountedPrice(e.target.value)}
-                        className="w-full p-2 outline-none"
-                        placeholder="Enter discounted price"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-            </label>
+            
+            <div className="flex items-center space-x-4">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="btn-secondary flex items-center space-x-2"
+              >
+                <Eye className="w-4 h-4" />
+                <span>Preview</span>
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleSubmit}
+                disabled={loading}
+                className="btn-primary flex items-center space-x-2 disabled:opacity-50"
+              >
+                {loading ? (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <Save className="w-4 h-4" />
+                )}
+                <span>{loading ? "Saving..." : "Save Course"}</span>
+              </motion.button>
+            </div>
           </div>
+        </motion.div>
 
-          <div className="bg-indigo-50 text-indigo-700 p-3 mt-4 text-sm border-l-4 border-indigo-500 rounded">
-            💡 You can add multiple pricing options and access advanced plans later under course pricing.
+        {/* Form */}
+        <div className="p-8">
+          <div className="max-w-4xl mx-auto">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Basic Information */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+              >
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                    <Tag className="w-5 h-5 text-blue-600" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">Basic Information</h2>
+                </div>
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Course Title *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Enter an engaging course title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="input-field"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Course Description *
+                    </label>
+                    <textarea
+                      placeholder="Describe what students will learn in this course..."
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      rows="6"
+                      className="input-field resize-none"
+                      required
+                    />
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Cover Image */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+              >
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                    <Image className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">Cover Image *</h2>
+                </div>
+
+                <div className="space-y-4">
+                  {coverPreview ? (
+                    <div className="relative">
+                      <img
+                        src={coverPreview}
+                        alt="Course cover preview"
+                        className="w-full h-64 object-cover rounded-xl"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setCoverPreview("");
+                          setCoverImage(null);
+                        }}
+                        className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-indigo-400 transition-colors">
+                      <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600 mb-2">Upload a cover image for your course</p>
+                      <p className="text-sm text-gray-500 mb-4">Recommended: 1280x720px, JPG or PNG</p>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                        id="cover-upload"
+                      />
+                      <label
+                        htmlFor="cover-upload"
+                        className="btn-secondary cursor-pointer inline-flex items-center space-x-2"
+                      >
+                        <Upload className="w-4 h-4" />
+                        <span>Choose Image</span>
+                      </label>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+
+              {/* Pricing */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+              >
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                    <DollarSign className="w-5 h-5 text-green-600" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">Pricing</h2>
+                </div>
+
+                <div className="space-y-6">
+                  {/* Free Plan */}
+                  <motion.label
+                    whileHover={{ scale: 1.01 }}
+                    className={`block border-2 rounded-xl p-6 cursor-pointer transition-all ${
+                      plan === "free"
+                        ? "border-indigo-500 bg-indigo-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <input
+                        type="radio"
+                        name="pricing"
+                        value="free"
+                        checked={plan === "free"}
+                        onChange={() => setPlan("free")}
+                        className="w-5 h-5 text-indigo-600"
+                      />
+                      <div>
+                        <div className="font-bold text-lg text-gray-900">Free Course</div>
+                        <div className="text-gray-600">
+                          Make your course available to everyone at no cost
+                        </div>
+                      </div>
+                    </div>
+                  </motion.label>
+
+                  {/* Paid Plan */}
+                  <motion.label
+                    whileHover={{ scale: 1.01 }}
+                    className={`block border-2 rounded-xl p-6 cursor-pointer transition-all ${
+                      plan === "one-time"
+                        ? "border-indigo-500 bg-indigo-50"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className="flex items-center space-x-4 mb-4">
+                      <input
+                        type="radio"
+                        name="pricing"
+                        value="one-time"
+                        checked={plan === "one-time"}
+                        onChange={() => setPlan("one-time")}
+                        className="w-5 h-5 text-indigo-600"
+                      />
+                      <div>
+                        <div className="font-bold text-lg text-gray-900">One-time Payment</div>
+                        <div className="text-gray-600">
+                          Students pay once for lifetime access
+                        </div>
+                      </div>
+                    </div>
+
+                    {plan === "one-time" && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6"
+                      >
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Original Price *
+                          </label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                            <input
+                              type="number"
+                              value={totalPrice}
+                              onChange={(e) => setTotalPrice(e.target.value)}
+                              className="input-field pl-8"
+                              placeholder="2999"
+                              min="0"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Discounted Price *
+                          </label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                            <input
+                              type="number"
+                              value={discountedPrice}
+                              onChange={(e) => setDiscountedPrice(e.target.value)}
+                              className="input-field pl-8"
+                              placeholder="1999"
+                              min="0"
+                            />
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </motion.label>
+                </div>
+
+                <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                  <p className="text-blue-800 text-sm">
+                    💡 <strong>Tip:</strong> You can always change your pricing later. Consider starting 
+                    with a lower price to attract initial students and build reviews.
+                  </p>
+                </div>
+              </motion.div>
+            </form>
           </div>
         </div>
-      </form>
+      </div>
     </div>
   );
 }

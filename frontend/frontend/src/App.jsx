@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Navbar from './layout/Navbar';
 import Landingpage from './assets/pages/Landingpage';
 import Signup from './assets/Signup';
@@ -8,7 +9,6 @@ import Courses from './assets/pages/Courses';
 import Home from "./assets/pages/Home";
 import CreateCourse from './assets/pages/CreateCourse';
 import CourseContent from './assets/pages/CourseContent';
-import AddCourseContent from './assets/pages/CourseContent';
 import CoursePreview from './assets/pages/CoursePreview';
 import ProtectedRoute from './components/ProtectedRoute'; // ✅ import
 
@@ -44,10 +44,19 @@ function App() {
           }
         />
 
-        <Route path="/add-content" element={<AddCourseContent />} />
         <Route path="/course-content/:courseId" element={<CourseContent />} />
         <Route path="/courses/preview/:id" element={<CoursePreview />} />
       </Routes>
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+        }}
+      />
     </Router>
   );
 }
