@@ -64,22 +64,22 @@ export default function Home() {
   const stats = userRole === 'teacher' ? teacherStats : studentStats;
 
   return (
-    <div className="flex bg-gray-50 min-h-screen">
+    <div className="flex bg-gray-50 min-h-screen pt-20">
       <Sidebar />
       
-      <div className="flex-1 overflow-hidden">
+      <div className={`flex-1 overflow-hidden ${userRole === 'teacher' ? 'ml-80' : ''}`}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white border-b border-gray-200 p-8"
+          className="bg-white border-b border-gray-200 p-8 shadow-sm"
         >
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-4xl font-bold text-gray-900 mb-2">
                 Welcome back, {userName}! 👋
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 text-lg">
                 {userRole === 'teacher' 
                   ? "Here's what's happening with your courses today"
                   : "Continue your learning journey"
@@ -90,7 +90,7 @@ export default function Home() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="btn-secondary"
+                className="btn-secondary flex items-center space-x-2"
               >
                 <Calendar className="w-4 h-4 mr-2" />
                 Today's Schedule
@@ -100,7 +100,7 @@ export default function Home() {
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="btn-primary"
+                    className="btn-primary flex items-center space-x-2"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Create Course
@@ -122,19 +122,19 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="card-hover bg-white rounded-2xl p-6 shadow-lg border border-gray-100"
+                  className="card-hover bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl"
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className={`w-12 h-12 bg-${stat.color}-100 rounded-xl flex items-center justify-center`}>
                       <Icon className={`w-6 h-6 text-${stat.color}-600`} />
                     </div>
-                    <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full font-medium">
+                    <span className="text-xs text-green-600 bg-green-100 px-3 py-1 rounded-full font-bold">
                       {stat.change}
                     </span>
                   </div>
                   <div>
-                    <p className="text-3xl font-bold text-gray-900 mb-1">{stat.value}</p>
-                    <p className="text-gray-600 text-sm">{stat.label}</p>
+                    <p className="text-4xl font-bold text-gray-900 mb-1">{stat.value}</p>
+                    <p className="text-gray-600 text-sm font-medium">{stat.label}</p>
                   </div>
                 </motion.div>
               );
@@ -149,8 +149,8 @@ export default function Home() {
               transition={{ delay: 0.3 }}
               className="lg:col-span-1"
             >
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Actions</h3>
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h3>
                 <div className="space-y-3">
                   {quickActions.map((action, index) => {
                     const Icon = action.icon;
@@ -158,12 +158,12 @@ export default function Home() {
                       <Link key={index} to={action.href}>
                         <motion.div
                           whileHover={{ scale: 1.02, x: 5 }}
-                          className="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-all duration-200 group"
+                          className="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-all duration-200 group border border-transparent hover:border-gray-200"
                         >
                           <div className={`w-10 h-10 bg-${action.color}-100 rounded-lg flex items-center justify-center group-hover:bg-${action.color}-200 transition-colors`}>
                             <Icon className={`w-5 h-5 text-${action.color}-600`} />
                           </div>
-                          <span className="font-medium text-gray-900 group-hover:text-gray-700">
+                          <span className="font-semibold text-gray-900 group-hover:text-gray-700">
                             {action.label}
                           </span>
                           <ArrowRight className="w-4 h-4 text-gray-400 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -182,10 +182,10 @@ export default function Home() {
               transition={{ delay: 0.4 }}
               className="lg:col-span-2"
             >
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold text-gray-900">Recent Activity</h3>
-                  <button className="text-indigo-600 hover:text-indigo-700 font-medium text-sm">
+                  <h3 className="text-2xl font-bold text-gray-900">Recent Activity</h3>
+                  <button className="text-indigo-600 hover:text-indigo-700 font-semibold text-sm">
                     View All
                   </button>
                 </div>
@@ -198,14 +198,14 @@ export default function Home() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5 + index * 0.1 }}
-                        className="flex items-start space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors"
+                        className="flex items-start space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200"
                       >
-                        <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
                           <Icon className="w-5 h-5 text-gray-600" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-gray-900 font-medium">{activity.title}</p>
-                          <p className="text-gray-500 text-sm mt-1">{activity.time}</p>
+                          <p className="text-gray-900 font-semibold">{activity.title}</p>
+                          <p className="text-gray-500 text-sm mt-1 font-medium">{activity.time}</p>
                         </div>
                       </motion.div>
                     );
@@ -220,14 +220,14 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white"
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white shadow-xl hover:shadow-2xl transition-shadow"
           >
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-2xl font-bold mb-2">
+                <h3 className="text-3xl font-bold mb-2">
                   {userRole === 'teacher' ? 'Grow Your Teaching Business' : 'Continue Learning'}
                 </h3>
-                <p className="text-indigo-100 mb-6">
+                <p className="text-indigo-100 mb-6 text-lg">
                   {userRole === 'teacher' 
                     ? 'Create more courses and reach more students worldwide'
                     : 'Complete your current courses and earn certificates'
@@ -236,13 +236,13 @@ export default function Home() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-white text-indigo-600 font-semibold py-3 px-6 rounded-xl hover:bg-gray-50 transition-colors"
+                  className="bg-white text-indigo-600 font-bold py-4 px-8 rounded-xl hover:bg-gray-50 transition-colors shadow-lg"
                 >
                   {userRole === 'teacher' ? 'Create New Course' : 'Browse Courses'}
                 </motion.button>
               </div>
               <div className="hidden lg:block">
-                <div className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center">
+                <div className="w-32 h-32 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
                   {userRole === 'teacher' ? (
                     <BookOpen className="w-16 h-16 text-white" />
                   ) : (

@@ -119,15 +119,15 @@ export default function CreateCourse() {
   };
 
   return (
-    <div className="flex bg-gray-50 min-h-screen">
+    <div className="flex bg-gray-50 min-h-screen pt-20">
       <Sidebar />
       
-      <div className="flex-1">
+      <div className="flex-1 ml-80">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white border-b border-gray-200 p-8"
+          className="bg-white border-b border-gray-200 p-8 shadow-sm"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -135,15 +135,15 @@ export default function CreateCourse() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => navigate(-1)}
-                className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+                className="p-3 rounded-xl hover:bg-gray-100 transition-colors border border-gray-200"
               >
                 <ArrowLeft className="w-6 h-6 text-gray-600" />
               </motion.button>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-4xl font-bold text-gray-900">
                   {id ? "Edit Course" : "Create New Course"}
                 </h1>
-                <p className="text-gray-600 mt-1">
+                <p className="text-gray-600 mt-1 text-lg">
                   {id ? "Update your course details" : "Share your knowledge with the world"}
                 </p>
               </div>
@@ -153,7 +153,7 @@ export default function CreateCourse() {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="btn-secondary flex items-center space-x-2"
+                className="btn-secondary flex items-center space-x-2 shadow-md"
               >
                 <Eye className="w-4 h-4" />
                 <span>Preview</span>
@@ -163,7 +163,7 @@ export default function CreateCourse() {
                 whileTap={{ scale: 0.95 }}
                 onClick={handleSubmit}
                 disabled={loading}
-                className="btn-primary flex items-center space-x-2 disabled:opacity-50"
+                className="btn-primary flex items-center space-x-2 disabled:opacity-50 shadow-lg"
               >
                 {loading ? (
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -184,18 +184,18 @@ export default function CreateCourse() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+                className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
               >
                 <div className="flex items-center space-x-3 mb-6">
-                  <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shadow-md">
                     <Tag className="w-5 h-5 text-blue-600" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">Basic Information</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">Basic Information</h2>
                 </div>
 
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-bold text-gray-700 mb-3">
                       Course Title *
                     </label>
                     <input
@@ -203,13 +203,13 @@ export default function CreateCourse() {
                       placeholder="Enter an engaging course title"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="input-field"
+                      className="input-field text-lg"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-bold text-gray-700 mb-3">
                       Course Description *
                     </label>
                     <textarea
@@ -217,7 +217,7 @@ export default function CreateCourse() {
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       rows="6"
-                      className="input-field resize-none"
+                      className="input-field resize-none text-lg"
                       required
                     />
                   </div>
@@ -229,13 +229,13 @@ export default function CreateCourse() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+                className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
               >
                 <div className="flex items-center space-x-3 mb-6">
-                  <div className="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center shadow-md">
                     <Image className="w-5 h-5 text-purple-600" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">Cover Image *</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">Cover Image *</h2>
                 </div>
 
                 <div className="space-y-4">
@@ -244,7 +244,7 @@ export default function CreateCourse() {
                       <img
                         src={coverPreview}
                         alt="Course cover preview"
-                        className="w-full h-64 object-cover rounded-xl"
+                        className="w-full h-64 object-cover rounded-xl shadow-lg"
                       />
                       <button
                         type="button"
@@ -252,16 +252,16 @@ export default function CreateCourse() {
                           setCoverPreview("");
                           setCoverImage(null);
                         }}
-                        className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors"
+                        className="absolute top-4 right-4 bg-red-500 text-white p-3 rounded-xl hover:bg-red-600 transition-colors shadow-lg"
                       >
                         Remove
                       </button>
                     </div>
                   ) : (
-                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-indigo-400 transition-colors">
+                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center hover:border-indigo-400 transition-colors bg-gray-50">
                       <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-600 mb-2">Upload a cover image for your course</p>
-                      <p className="text-sm text-gray-500 mb-4">Recommended: 1280x720px, JPG or PNG</p>
+                      <p className="text-gray-600 mb-2 text-lg font-medium">Upload a cover image for your course</p>
+                      <p className="text-sm text-gray-500 mb-6 font-medium">Recommended: 1280x720px, JPG or PNG</p>
                       <input
                         type="file"
                         accept="image/*"
@@ -271,7 +271,7 @@ export default function CreateCourse() {
                       />
                       <label
                         htmlFor="cover-upload"
-                        className="btn-secondary cursor-pointer inline-flex items-center space-x-2"
+                        className="btn-secondary cursor-pointer inline-flex items-center space-x-2 shadow-md"
                       >
                         <Upload className="w-4 h-4" />
                         <span>Choose Image</span>
@@ -286,13 +286,13 @@ export default function CreateCourse() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100"
+                className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow"
               >
                 <div className="flex items-center space-x-3 mb-6">
-                  <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center shadow-md">
                     <DollarSign className="w-5 h-5 text-green-600" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">Pricing</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">Pricing</h2>
                 </div>
 
                 <div className="space-y-6">
@@ -301,7 +301,7 @@ export default function CreateCourse() {
                     whileHover={{ scale: 1.01 }}
                     className={`block border-2 rounded-xl p-6 cursor-pointer transition-all ${
                       plan === "free"
-                        ? "border-indigo-500 bg-indigo-50"
+                        ? "border-indigo-500 bg-indigo-50 shadow-md"
                         : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
@@ -312,11 +312,11 @@ export default function CreateCourse() {
                         value="free"
                         checked={plan === "free"}
                         onChange={() => setPlan("free")}
-                        className="w-5 h-5 text-indigo-600"
+                        className="w-6 h-6 text-indigo-600"
                       />
                       <div>
-                        <div className="font-bold text-lg text-gray-900">Free Course</div>
-                        <div className="text-gray-600">
+                        <div className="font-bold text-xl text-gray-900">Free Course</div>
+                        <div className="text-gray-600 font-medium">
                           Make your course available to everyone at no cost
                         </div>
                       </div>
@@ -328,7 +328,7 @@ export default function CreateCourse() {
                     whileHover={{ scale: 1.01 }}
                     className={`block border-2 rounded-xl p-6 cursor-pointer transition-all ${
                       plan === "one-time"
-                        ? "border-indigo-500 bg-indigo-50"
+                        ? "border-indigo-500 bg-indigo-50 shadow-md"
                         : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
@@ -339,11 +339,11 @@ export default function CreateCourse() {
                         value="one-time"
                         checked={plan === "one-time"}
                         onChange={() => setPlan("one-time")}
-                        className="w-5 h-5 text-indigo-600"
+                        className="w-6 h-6 text-indigo-600"
                       />
                       <div>
-                        <div className="font-bold text-lg text-gray-900">One-time Payment</div>
-                        <div className="text-gray-600">
+                        <div className="font-bold text-xl text-gray-900">One-time Payment</div>
+                        <div className="text-gray-600 font-medium">
                           Students pay once for lifetime access
                         </div>
                       </div>
@@ -356,16 +356,16 @@ export default function CreateCourse() {
                         className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6"
                       >
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label className="block text-sm font-bold text-gray-700 mb-3">
                             Original Price *
                           </label>
                           <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-bold">₹</span>
                             <input
                               type="number"
                               value={totalPrice}
                               onChange={(e) => setTotalPrice(e.target.value)}
-                              className="input-field pl-8"
+                              className="input-field pl-10 text-lg"
                               placeholder="2999"
                               min="0"
                             />
@@ -373,16 +373,16 @@ export default function CreateCourse() {
                         </div>
 
                         <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          <label className="block text-sm font-bold text-gray-700 mb-3">
                             Discounted Price *
                           </label>
                           <div className="relative">
-                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
+                            <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-bold">₹</span>
                             <input
                               type="number"
                               value={discountedPrice}
                               onChange={(e) => setDiscountedPrice(e.target.value)}
-                              className="input-field pl-8"
+                              className="input-field pl-10 text-lg"
                               placeholder="1999"
                               min="0"
                             />
@@ -393,8 +393,8 @@ export default function CreateCourse() {
                   </motion.label>
                 </div>
 
-                <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-200">
-                  <p className="text-blue-800 text-sm">
+                <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
+                  <p className="text-blue-800 text-sm font-medium">
                     💡 <strong>Tip:</strong> You can always change your pricing later. Consider starting 
                     with a lower price to attract initial students and build reviews.
                   </p>

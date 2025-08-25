@@ -62,12 +62,12 @@ export default function CourseContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-20">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white border-b border-gray-200 p-8"
+        className="bg-white border-b border-gray-200 p-8 shadow-sm"
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
@@ -75,15 +75,15 @@ export default function CourseContent() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate(-1)}
-              className="p-2 rounded-xl hover:bg-gray-100 transition-colors"
+              className="p-3 rounded-xl hover:bg-gray-100 transition-colors border border-gray-200"
             >
               <ArrowLeft className="w-6 h-6 text-gray-600" />
             </motion.button>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-4xl font-bold text-gray-900">
                 {course?.title || "Course Content"}
               </h1>
-              <p className="text-gray-600 mt-1">Manage your course materials and structure</p>
+              <p className="text-gray-600 mt-1 text-lg">Manage your course materials and structure</p>
             </div>
           </div>
           
@@ -91,7 +91,7 @@ export default function CourseContent() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="btn-secondary flex items-center space-x-2"
+              className="btn-secondary flex items-center space-x-2 shadow-md"
             >
               <Eye className="w-4 h-4" />
               <span>Preview</span>
@@ -99,7 +99,7 @@ export default function CourseContent() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="btn-secondary flex items-center space-x-2"
+              className="btn-secondary flex items-center space-x-2 shadow-md"
             >
               <Settings className="w-4 h-4" />
               <span>Settings</span>
@@ -116,8 +116,8 @@ export default function CourseContent() {
             animate={{ opacity: 1, x: 0 }}
             className="lg:col-span-1"
           >
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 sticky top-8">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Course Structure</h3>
+            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 sticky top-28 hover:shadow-xl transition-shadow">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">Course Structure</h3>
               
               {/* Course Cover */}
               <div className="mb-6">
@@ -125,10 +125,10 @@ export default function CourseContent() {
                   <img
                     src={`http://localhost:3001${course.coverImage}`}
                     alt="Course cover"
-                    className="w-full h-32 object-cover rounded-xl"
+                    className="w-full h-32 object-cover rounded-xl shadow-md"
                   />
                 ) : (
-                  <div className="w-full h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center">
+                  <div className="w-full h-32 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center shadow-md">
                     <BookOpen className="w-12 h-12 text-indigo-400" />
                   </div>
                 )}
@@ -139,14 +139,14 @@ export default function CourseContent() {
                 {contentTypes.map((type, index) => {
                   const Icon = type.icon;
                   return (
-                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                       <div className="flex items-center space-x-3">
-                        <div className={`w-8 h-8 bg-${type.color}-100 rounded-lg flex items-center justify-center`}>
+                        <div className={`w-10 h-10 bg-${type.color}-100 rounded-xl flex items-center justify-center`}>
                           <Icon className={`w-4 h-4 text-${type.color}-600`} />
                         </div>
-                        <span className="text-sm font-medium text-gray-700">{type.label}</span>
+                        <span className="text-sm font-semibold text-gray-700">{type.label}</span>
                       </div>
-                      <span className="text-sm font-bold text-gray-900">{type.count}</span>
+                      <span className="text-sm font-bold text-gray-900 bg-white px-2 py-1 rounded-lg">{type.count}</span>
                     </div>
                   );
                 })}
@@ -154,15 +154,15 @@ export default function CourseContent() {
 
               {/* Quick Actions */}
               <div className="mt-6 pt-6 border-t border-gray-200">
-                <h4 className="font-semibold text-gray-900 mb-3">Quick Actions</h4>
+                <h4 className="font-bold text-gray-900 mb-4">Quick Actions</h4>
                 <div className="space-y-2">
-                  <button className="w-full text-left p-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+                  <button className="w-full text-left p-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-xl transition-colors">
                     Reorder Content
                   </button>
-                  <button className="w-full text-left p-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+                  <button className="w-full text-left p-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-xl transition-colors">
                     Bulk Upload
                   </button>
-                  <button className="w-full text-left p-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+                  <button className="w-full text-left p-3 text-sm font-medium text-gray-600 hover:bg-gray-50 rounded-xl transition-colors">
                     Import from Library
                   </button>
                 </div>
@@ -178,12 +178,12 @@ export default function CourseContent() {
           >
             {/* Empty State */}
             {(!course?.pdfs || course.pdfs.length === 0) ? (
-              <div className="bg-white rounded-2xl p-12 shadow-lg border border-gray-100 text-center">
+              <div className="bg-white rounded-2xl p-12 shadow-lg border border-gray-100 text-center hover:shadow-xl transition-shadow">
                 <div className="w-24 h-24 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
                   <BookOpen className="w-12 h-12 text-indigo-500" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Start Building Your Course</h3>
-                <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                <h3 className="text-3xl font-bold text-gray-900 mb-4">Start Building Your Course</h3>
+                <p className="text-gray-600 mb-8 max-w-md mx-auto text-lg">
                   Add your first piece of content to get started. You can upload videos, PDFs, 
                   audio files, or create interactive content.
                 </p>
@@ -193,19 +193,19 @@ export default function CourseContent() {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     onClick={() => setShowModal(true)}
-                    className="flex items-center justify-center space-x-2 p-4 border-2 border-dashed border-indigo-300 text-indigo-600 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all"
+                    className="flex items-center justify-center space-x-2 p-6 border-2 border-dashed border-indigo-300 text-indigo-600 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all shadow-md"
                   >
                     <Upload className="w-5 h-5" />
-                    <span className="font-medium">Upload Content</span>
+                    <span className="font-semibold">Upload Content</span>
                   </motion.button>
                   
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-center space-x-2 p-4 border-2 border-dashed border-purple-300 text-purple-600 rounded-xl hover:border-purple-400 hover:bg-purple-50 transition-all"
+                    className="flex items-center justify-center space-x-2 p-6 border-2 border-dashed border-purple-300 text-purple-600 rounded-xl hover:border-purple-400 hover:bg-purple-50 transition-all shadow-md"
                   >
                     <Plus className="w-5 h-5" />
-                    <span className="font-medium">Create Content</span>
+                    <span className="font-semibold">Create Content</span>
                   </motion.button>
                 </div>
 
@@ -213,7 +213,7 @@ export default function CourseContent() {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setShowModal(true)}
-                  className="btn-primary"
+                  className="btn-primary shadow-lg"
                 >
                   Add Your First Content
                 </motion.button>
@@ -222,12 +222,12 @@ export default function CourseContent() {
               /* Content List */
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold text-gray-900">Course Content</h2>
+                  <h2 className="text-3xl font-bold text-gray-900">Course Content</h2>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setShowModal(true)}
-                    className="btn-primary flex items-center space-x-2"
+                    className="btn-primary flex items-center space-x-2 shadow-lg"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Add Content</span>
@@ -235,8 +235,8 @@ export default function CourseContent() {
                 </div>
 
                 {/* PDF List */}
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Documents</h3>
+                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-6">Documents</h3>
                   <div className="space-y-3">
                     {course.pdfs.map((pdf, index) => (
                       <motion.div
@@ -244,17 +244,17 @@ export default function CourseContent() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                        className="flex items-center justify-between p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors border border-transparent hover:border-gray-200"
                       >
                         <div className="flex items-center space-x-4">
-                          <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                          <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center shadow-md">
                             <FileText className="w-5 h-5 text-red-600" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">
+                            <p className="font-bold text-gray-900 text-lg">
                               {pdf.title || `Chapter ${index + 1}`}
                             </p>
-                            <p className="text-sm text-gray-500">PDF Document</p>
+                            <p className="text-sm text-gray-500 font-medium">PDF Document</p>
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
@@ -262,14 +262,14 @@ export default function CourseContent() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => window.open(`http://localhost:3001${pdf.url}`, "_blank")}
-                            className="p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-all"
+                            className="p-3 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all shadow-sm"
                           >
                             <Play className="w-4 h-4" />
                           </motion.button>
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition-all"
+                            className="p-3 text-gray-600 hover:text-gray-900 hover:bg-gray-200 rounded-xl transition-all shadow-sm"
                           >
                             <Settings className="w-4 h-4" />
                           </motion.button>
